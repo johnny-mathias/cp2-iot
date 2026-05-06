@@ -1,0 +1,443 @@
+[
+    {
+        "id": "f465c0e220cfe9f3",
+        "type": "tab",
+        "label": "cp2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "6bcb4d82f4c1b15d",
+        "type": "mysql",
+        "z": "f465c0e220cfe9f3",
+        "mydb": "1054ade996785fc2",
+        "name": "MySQL",
+        "x": 720,
+        "y": 540,
+        "wires": [
+            [
+                "ef618ccb5721553f"
+            ]
+        ]
+    },
+    {
+        "id": "2b22c32145c141d0",
+        "type": "csv",
+        "z": "f465c0e220cfe9f3",
+        "name": "",
+        "spec": "",
+        "sep": ",",
+        "hdrin": "",
+        "hdrout": "none",
+        "multi": "one",
+        "ret": "\\r\\n",
+        "temp": "potenciometro,ultrassonico",
+        "skip": "0",
+        "strings": true,
+        "include_empty_strings": "",
+        "include_null_values": "",
+        "x": 390,
+        "y": 540,
+        "wires": [
+            [
+                "360cd85df71440ec"
+            ]
+        ]
+    },
+    {
+        "id": "360cd85df71440ec",
+        "type": "function",
+        "z": "f465c0e220cfe9f3",
+        "name": "function 1",
+        "func": "msg.topic = `\nINSERT INTO LEITURAS (potenciometro, ultrassonico, DATA)\nVALUES (:potenciometro, :ultrassonico, NOW())\n`\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 540,
+        "wires": [
+            [
+                "6bcb4d82f4c1b15d",
+                "cb92e3717cd8c462",
+                "93dab3c1c3a5e980"
+            ]
+        ]
+    },
+    {
+        "id": "cb92e3717cd8c462",
+        "type": "oracledb",
+        "z": "f465c0e220cfe9f3",
+        "d": true,
+        "name": "",
+        "usequery": false,
+        "query": "INSERT INTO oracleTableName\n\t(fieldName1, fieldName2, Fieldname3)\n\tVALUES (\n\t\t:valueOfValuesArrayIndex0,\n\t\t:valueOfValuesArrayIndex1,\n\t\t:valueOfValuesArrayIndex2,\n\t)",
+        "usemappings": false,
+        "mappings": "[\n\t\"location.of.first.array.index.field.in.msg.payload\",\n\t\"location.of.second.array.index.field\",\n\t\"last_array_indexfield.in[3]\"\n]",
+        "server": "f752a32d191d8d6a",
+        "resultaction": "multi",
+        "resultlimit": 100,
+        "x": 720,
+        "y": 480,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ef618ccb5721553f",
+        "type": "debug",
+        "z": "f465c0e220cfe9f3",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "eda0074f9cd9bb44",
+        "type": "mqtt in",
+        "z": "f465c0e220cfe9f3",
+        "name": "",
+        "topic": "mqtt",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "d23b4e390c78a3a0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 540,
+        "wires": [
+            [
+                "2b22c32145c141d0",
+                "216d354af95bda7f",
+                "2be598bb97e09d49",
+                "6ac6601392025e3b"
+            ]
+        ]
+    },
+    {
+        "id": "ae21b68c572edef4",
+        "type": "http request",
+        "z": "f465c0e220cfe9f3",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://viacep.com.br/ws/05886090/json/",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 530,
+        "y": 760,
+        "wires": [
+            [
+                "4311363b64fefb7c"
+            ]
+        ]
+    },
+    {
+        "id": "4311363b64fefb7c",
+        "type": "json",
+        "z": "f465c0e220cfe9f3",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 710,
+        "y": 760,
+        "wires": [
+            [
+                "226dd64a7ecc5079"
+            ]
+        ]
+    },
+    {
+        "id": "226dd64a7ecc5079",
+        "type": "ui_text",
+        "z": "f465c0e220cfe9f3",
+        "group": "e8b1d4e71bb36237",
+        "order": 0,
+        "width": "3",
+        "height": "3",
+        "name": "",
+        "label": "CEP:",
+        "format": "{{msg.payload}}",
+        "layout": "row-left",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 890,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "f9456f34117b302b",
+        "type": "ui_button",
+        "z": "f465c0e220cfe9f3",
+        "name": "",
+        "group": "3ae70277f8e5849b",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "button",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 290,
+        "y": 760,
+        "wires": [
+            [
+                "ae21b68c572edef4"
+            ]
+        ]
+    },
+    {
+        "id": "2be598bb97e09d49",
+        "type": "ui_chart",
+        "z": "f465c0e220cfe9f3",
+        "name": "",
+        "group": "66a7ba9479203632",
+        "order": 0,
+        "width": "6",
+        "height": "6",
+        "label": "Gráfico",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 400,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "216d354af95bda7f",
+        "type": "debug",
+        "z": "f465c0e220cfe9f3",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 400,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "93dab3c1c3a5e980",
+        "type": "debug",
+        "z": "f465c0e220cfe9f3",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "6ac6601392025e3b",
+        "type": "ui_gauge",
+        "z": "f465c0e220cfe9f3",
+        "name": "",
+        "group": "66a7ba9479203632",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Gauge",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 390,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "1054ade996785fc2",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "bohfgsmw2omrcmhhwnb8-mysql.services.clever-cloud.com",
+        "port": "3306",
+        "db": "bohfgsmw2omrcmhhwnb8",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "f752a32d191d8d6a",
+        "type": "oracle-server",
+        "connectionname": "FIAP",
+        "tnsname": "",
+        "connectiontype": "Classic",
+        "instantclientpath": "",
+        "host": "oracle.fiap.com.br",
+        "port": 1521,
+        "db": "FIAP",
+        "poolmin": "",
+        "poolmax": 4,
+        "pooltimeout": 60
+    },
+    {
+        "id": "d23b4e390c78a3a0",
+        "type": "mqtt-broker",
+        "name": "Hive MQ Server",
+        "broker": "51bf02160f1f4ecb81b48d440bf18c96.s1.eu.hivemq.cloud",
+        "port": "8883",
+        "tls": "4b69885e5e7a323a",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "5",
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "e8b1d4e71bb36237",
+        "type": "ui_group",
+        "name": "Saída Digital",
+        "tab": "bc832aabcd78d697",
+        "order": 4,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "3ae70277f8e5849b",
+        "type": "ui_group",
+        "name": "Entrada Digital",
+        "tab": "bc832aabcd78d697",
+        "order": 3,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "66a7ba9479203632",
+        "type": "ui_group",
+        "name": "Saídas Analógicas",
+        "tab": "bc832aabcd78d697",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "4b69885e5e7a323a",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": true,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "bc832aabcd78d697",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "96c3021308cbf5e0",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-node-mysql": "3.0.0",
+            "node-red-contrib-oracledb-mod": "0.7.6",
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
