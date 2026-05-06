@@ -1,5 +1,7 @@
 # 📡 Monitoramento Inteligente com IoT (ESP32 + MQTT + Node-RED)
 
+Nomes: Johnny Dias & João Adão
+
 ## 📖 Descrição do Projeto
 Este projeto tem como objetivo implementar uma solução de **monitoramento em tempo real utilizando Internet das Coisas (IoT)**.
 
